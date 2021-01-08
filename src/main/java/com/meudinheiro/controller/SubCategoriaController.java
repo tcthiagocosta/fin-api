@@ -71,5 +71,10 @@ public class SubCategoriaController {
                 })
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SubCategoria não encontrada."));
     }
+    
+    @GetMapping("/categoria/{id}")
+    public List<SubCategoria> obterTodosPorIdCategoria(@PathVariable Integer id) {
+        return subCategoriaService.obterTodosPorIdCategoria(id);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.meudinheiro.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,10 @@ public class LancamentoService {
     private LancamentoRepository lancamentoRepository;
 
     public Lancamento salvar(Lancamento lancamento) {
+    	if (lancamento.getPago()) {
+    		lancamento.setDataPagamento(LocalDate.now());
+    	}
+    	
         return lancamentoRepository.save(lancamento);
     }
     

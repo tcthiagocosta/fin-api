@@ -34,4 +34,8 @@ public class SubCategoriaService {
     public SubCategoria atualizar(SubCategoria subCategoria) {
     	return subCategoriaRepository.save(subCategoria);
     }
+    
+    public List<SubCategoria> obterTodosPorIdCategoria(Integer id) {
+		return subCategoriaRepository.findByCategoriaId(id);
+	}
 }

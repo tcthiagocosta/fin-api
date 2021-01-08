@@ -9,4 +9,5 @@ import com.meudinheiro.model.SubCategoria;
 public interface SubCategoriaRepository extends JpaRepository<SubCategoria, Integer> {
 
 	List<SubCategoria> findAllByOrderByIdAsc();
+	List<SubCategoria> findByCategoriaId(Integer id);
 }
