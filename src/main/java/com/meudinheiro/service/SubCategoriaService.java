@@ -38,4 +38,8 @@ public class SubCategoriaService {
     public List<SubCategoria> obterTodosPorIdCategoria(Integer id) {
 		return subCategoriaRepository.findByCategoriaId(id);
 	}
+    
+    public SubCategoria getSubCategoriaTransferencia() {
+    	return subCategoriaRepository.findByNome("Transferência");
+    }
 }

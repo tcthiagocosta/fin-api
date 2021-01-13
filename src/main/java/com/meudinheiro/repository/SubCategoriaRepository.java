@@ -10,4 +10,5 @@ public interface SubCategoriaRepository extends JpaRepository<SubCategoria, Inte
 
 	List<SubCategoria> findAllByOrderByIdAsc();
 	List<SubCategoria> findByCategoriaId(Integer id);
+	SubCategoria findByNome(String nome);
 }

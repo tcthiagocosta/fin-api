@@ -1,6 +1,7 @@
 package com.meudinheiro.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.meudinheiro.dto.LancamentoDTO;
 import com.meudinheiro.model.Lancamento;
 import com.meudinheiro.service.LancamentoService;
 
@@ -44,7 +46,7 @@ public class LancamentoController {
     }
 	
 	@GetMapping("{id}")
-    public Lancamento acharPorId(@PathVariable Integer id) {
+    public LancamentoDTO acharPorId(@PathVariable Integer id) {
         return lancamentoService.getPorId(id)
         		.orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lançamento não encontrado."));
     }
@@ -54,7 +56,7 @@ public class LancamentoController {
 	public void deletar(@PathVariable Integer id) {
 		lancamentoService.getPorId(id)
 		.map(lancamento -> {
-			lancamentoService.deletar(lancamento);
+			lancamentoService.deletar(lancamento.getId());
 			return Void.TYPE;
 		})
 		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lançamento não encontrado."));
@@ -62,12 +64,12 @@ public class LancamentoController {
     
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizar( @PathVariable Integer id, @RequestBody @Valid Lancamento lancamentoAtualizado ) {
+    public void atualizar( @PathVariable Integer id, @RequestBody @Valid LancamentoDTO lancamentoDTOAtualizado ) {
 
     	lancamentoService.getPorId(id)
                 .map( lancamento -> {
-                	lancamentoAtualizado.setId(lancamento.getId());
-                    return lancamentoService.atualizar(lancamentoAtualizado);
+                	lancamentoDTOAtualizado.setId(lancamento.getId());
+                    return lancamentoService.atualizar(lancamentoDTOAtualizado);
                 })
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lançamento não encontrado."));
     }

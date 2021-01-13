@@ -19,45 +19,28 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class Lancamento {
-
+public class Transferencia {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	
+	@Column(length = 200)
+	private String descricao;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_conta")
 	private Conta conta;
-
-	@ManyToOne
-	@JoinColumn(name = "id_fatura_cartao")
-	private FaturaCartao faturaCartao;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_transferencia")
-	private Transferencia transferencia;
-
-	@ManyToOne
-	@JoinColumn(name = "id_sub_categoria")
-	private SubCategoria subCategoria;
-
-	@Column(length = 200)
-	private String descricao;
-
-	@Column(length = 200)
-	private String tipo;
-
+	@JoinColumn(name = "id_conta_destino")
+	private Conta contaDestino;
+	
 	@Column
 	private BigDecimal valor;
-
+	
 	@Column
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate data;
+	private LocalDate data;	
 
-	@Column(name = "data_pagamento")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataPagamento;
-
-	@Column
-	private Boolean pago = false;
 }
