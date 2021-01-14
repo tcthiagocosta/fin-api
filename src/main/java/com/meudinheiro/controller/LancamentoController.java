@@ -56,7 +56,11 @@ public class LancamentoController {
 	public void deletar(@PathVariable Integer id) {
 		lancamentoService.getPorId(id)
 		.map(lancamento -> {
-			lancamentoService.deletar(lancamento.getId());
+			try {
+				lancamentoService.deletar(lancamento.getId());
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
 			return Void.TYPE;
 		})
 		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lançamento não encontrado."));

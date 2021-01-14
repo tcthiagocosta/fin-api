@@ -19,7 +19,7 @@ import com.meudinheiro.util.Funcao;
 public class LancamentoService {
 	
 	@Autowired
-    private LancamentoRepository lancamentoRepository;
+    private LancamentoRepository repository;
 	
 	@Autowired
 	private ContaService contaService;
@@ -32,27 +32,37 @@ public class LancamentoService {
     		lancamento.setDataPagamento(LocalDate.now());
     	}
     	
-        return lancamentoRepository.save(lancamento);
+        return repository.save(lancamento);
     }
     
     public Optional<LancamentoDTO> getPorId(Integer id) {
     	
-    	Lancamento lancamento = lancamentoRepository.findById(id).orElse(null);
+    	Lancamento lancamento = repository.findById(id).orElse(null);
     	LancamentoDTO dto = builderLancamentoDTO(lancamento);
 		return Optional.ofNullable(dto);
     }
+    
+    public Lancamento getLancamentoPorId(Integer id) {
+    	return repository.getOne(id);
+    }
 
     public List<Lancamento> obterTodos() {
-		return lancamentoRepository.findAllByOrderByIdAsc();
+		return repository.findAllByOrderByIdAsc();
 	}
     
-    public void deletar(Integer id) {
-    	lancamentoRepository.deleteById(id);
+    public void deletar(Integer id) throws Exception {
+    	
+    	Lancamento lancamento = getLancamentoPorId(id);
+    	
+    	if (lancamento.getTransferencia() != null)
+    		throw new Exception("Lançamento não pode ser deletado, está vinculado a transferência " + lancamento.getTransferencia().getId()); 
+    	
+    	repository.deleteById(id);
     }
     
     public LancamentoDTO atualizar(LancamentoDTO lancamentoDTO) {
     	
-    	Lancamento lanc = lancamentoRepository.save(builderLancamento(lancamentoDTO));
+    	Lancamento lanc = repository.save(builderLancamento(lancamentoDTO));
     	
     	return builderLancamentoDTO(lanc);
     }
@@ -130,8 +140,19 @@ public class LancamentoService {
     	lanc.setTransferencia(transferencia);
     	lanc.setSubCategoria(subCategoriaService.getSubCategoriaTransferencia());
 
-    	salvar(lanc);
-    	
     	return lanc;
     }
+    
+    public Lancamento getPorTransferenciaETipo(Integer idTransferencia, String tipo) {
+    	return repository.findByTransferenciaAndTipo(idTransferencia, tipo);
+    }
+    
+    public void removeLancamentoTransferencia(Integer idTransferencia) {
+    	List<Lancamento> lancamentos =  repository.findAllByTransferenciaId(idTransferencia);
+    	
+    	for (Lancamento lancamento : lancamentos) {
+    		repository.delete(lancamento);
+		}
+    }
+    
 }

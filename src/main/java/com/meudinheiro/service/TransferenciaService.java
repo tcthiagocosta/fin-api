@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meudinheiro.enumeration.Tipo;
+import com.meudinheiro.model.Lancamento;
 import com.meudinheiro.model.Transferencia;
 import com.meudinheiro.repository.TransferenciaRepository;
 
@@ -23,10 +24,12 @@ public class TransferenciaService {
     	transferencia = transferenciaRepository.save(transferencia);
     	
     	// Lançamento conta origem
-    	lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.DESPESA);
+    	Lancamento lancOrigem = lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.DESPESA);
+    	lancamentoService.salvar(lancOrigem);
     	
     	// Lançamento conta destino
-    	lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.RECEITA);
+    	Lancamento lancDestino = lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.RECEITA);
+    	lancamentoService.salvar(lancDestino);
     	
     	return transferencia;
     }
@@ -40,10 +43,28 @@ public class TransferenciaService {
 	}
     
     public void deletar(Transferencia transferencia) {
+    	
+    	// removendo os lançamentos vinculados
+    	lancamentoService.removeLancamentoTransferencia(transferencia.getId());
+    	
     	transferenciaRepository.delete(transferencia);
     }
     
     public Transferencia atualizar(Transferencia transferencia) {
-    	return transferenciaRepository.save(transferencia);
+    	
+    	// Lançamento conta origem
+    	Lancamento lancOrigemNovo = lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.DESPESA);
+    	Lancamento lancOrigemSalvo = lancamentoService.getPorTransferenciaETipo(transferencia.getId(), Tipo.DESPESA.toString());
+    	lancOrigemNovo.setId(lancOrigemSalvo.getId());
+    	lancamentoService.salvar(lancOrigemNovo);
+    	
+    	// Lançamento conta destino
+    	Lancamento lancDestinoNovo = lancamentoService.gerarLancamentoDaTransferencia(transferencia, Tipo.RECEITA);
+    	Lancamento lancDestinoSalvo = lancamentoService.getPorTransferenciaETipo(transferencia.getId(), Tipo.RECEITA.toString());
+    	lancDestinoNovo.setId(lancDestinoSalvo.getId());
+    	lancamentoService.salvar(lancDestinoNovo);
+    	
+    	transferenciaRepository.save(transferencia);
+    	return transferencia; 
     }
 }
