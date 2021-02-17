@@ -23,7 +23,7 @@ public class LancamentoDTO {
 	private String tipo;
 	private BigDecimal valor;
 	private String data;
-	private String pago;
+	private boolean pago;
 	private String dataPagamento;
 
 }

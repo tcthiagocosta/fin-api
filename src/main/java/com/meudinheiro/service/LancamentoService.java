@@ -26,6 +26,11 @@ public class LancamentoService {
 	
 	@Autowired
 	private SubCategoriaService subCategoriaService;
+	
+	 public Lancamento salvarDTO(LancamentoDTO lancamentoDTO) {
+	    	Lancamento lancamento = builderLancamento(lancamentoDTO);
+	    	return salvar(lancamento);
+	    }
 
     public Lancamento salvar(Lancamento lancamento) {
     	if (lancamento.getPago()) {
@@ -84,7 +89,7 @@ public class LancamentoService {
     	dto.setTipo(lancamento.getTipo());
     	dto.setValor(lancamento.getValor());
     	dto.setData(Funcao.localDateToString(lancamento.getData()));
-    	dto.setPago(lancamento.getPago() ? "SIM" : "NAO");
+    	dto.setPago(lancamento.getPago());
     	
     	try {
 			dto.setDataPagamento(Funcao.localDateToString(lancamento.getDataPagamento()));
@@ -99,14 +104,19 @@ public class LancamentoService {
     	Lancamento lanc = new Lancamento();
     	lanc.setId(dto.getId());
     	lanc.setConta(dto.getConta());
-    	lanc.setFaturaCartao(dto.getFaturaCartao());
+    	
+    	if (dto.getFaturaCartao() == null || dto.getFaturaCartao().getId() == null)
+    		lanc.setFaturaCartao(null);
+    	else
+    		lanc.setFaturaCartao(dto.getFaturaCartao());
+    	
     	lanc.setSubCategoria(dto.getSubCategoria());
     	lanc.setDescricao(dto.getDescricao());
     	lanc.setTipo(dto.getTipo());
     	lanc.setValor(dto.getValor());
     	lanc.setData(Funcao.strToLocalDate(dto.getData()));
     	
-    	if ("SIM".equals(dto.getPago())) {
+    	if (dto.isPago()) {
     		lanc.setPago(true);
     		lanc.setDataPagamento(LocalDate.now());
     	} else {

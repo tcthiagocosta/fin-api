@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.meudinheiro.model.Cartao;
 import com.meudinheiro.model.FaturaCartao;
 import com.meudinheiro.repository.FaturaCartaoRepository;
 
@@ -44,5 +45,9 @@ public class FaturaCartaoService {
     	}
     	
     	return faturaCartaoRepository.save(faturaCartao);
+    }
+    
+    public FaturaCartao getFaturaPorMesEAnoECartao(Integer mes, Integer ano, Cartao cartao) {
+    	return faturaCartaoRepository.findByMesAndAnoAndCartao(mes, ano, cartao);
     }
 }

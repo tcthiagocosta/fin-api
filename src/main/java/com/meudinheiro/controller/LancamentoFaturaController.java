@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.meudinheiro.dto.RequestBodyLancamentoFatura;
+import com.meudinheiro.model.Cartao;
 import com.meudinheiro.model.LancamentoFatura;
 import com.meudinheiro.service.LancamentoFaturaService;
 
@@ -30,10 +32,11 @@ public class LancamentoFaturaController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public LancamentoFatura salvar(@RequestBody @Valid LancamentoFatura lancamentoFatura) {
+	public LancamentoFatura salvar(@RequestBody @Valid RequestBodyLancamentoFatura bodyLancamentoFatura) {
 		try {
-			return lancamentoFaturaService.salvar(lancamentoFatura);
+			return lancamentoFaturaService.salvar(bodyLancamentoFatura.getLancamentoFatura(), bodyLancamentoFatura.getCartao());
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}

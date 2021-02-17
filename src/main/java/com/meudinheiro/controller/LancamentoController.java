@@ -32,9 +32,9 @@ public class LancamentoController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lancamento salvar(@RequestBody @Valid Lancamento lancamento) {
+	public Lancamento salvar(@RequestBody @Valid LancamentoDTO lancamentoDTO) {
 		try {
-			return lancamentoService.salvar(lancamento);
+			return lancamentoService.salvarDTO(lancamentoDTO);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

@@ -22,6 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/faturaCartao/**").hasAnyRole("ADMIN")
                 .antMatchers("/api/lancamento/**").hasAnyRole("ADMIN")
                 .antMatchers("/api/transferencia/**").hasAnyRole("ADMIN")
+                .antMatchers("/api/lancamentoFatura/**").hasAnyRole("ADMIN")
                 .anyRequest().denyAll();
     }
 }
